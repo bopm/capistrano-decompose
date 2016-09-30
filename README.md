@@ -40,7 +40,7 @@ $ gem install capistrano-decompose
 Add this line to your `Capfile`:
 
 ``` ruby
-require 'capistrano/decompose
+require 'capistrano/decompose'
 ```
 
 ## Options for deployment
