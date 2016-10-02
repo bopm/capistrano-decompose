@@ -89,7 +89,7 @@ namespace :decompose do
   def docker_execute_interactively(host, command)
     user = host.user
     port = fetch(:port) || 22
-    docker_run = "docker-compose -p #{fetch :application} run --rm #{fetch(:decompose_web_service)} #{command}"
+    docker_run = "docker-compose -u $(id -u):$(id -g) -p #{fetch :application} run --rm #{fetch(:decompose_web_service)} #{command}"
     exec "ssh -l #{user} #{host} -p #{port} -t 'cd #{deploy_to}/current && #{docker_run}'"
   end
 
