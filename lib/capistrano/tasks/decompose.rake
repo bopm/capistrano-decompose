@@ -79,7 +79,7 @@ namespace :decompose do
   end
 
   def docker_rake(*args)
-    docker_execute('run', '--rm', fetch(:decompose_web_service), '-u $(id -u):$(id -g)', 'rake', *args)
+    docker_execute('run', '-u $(id -u):$(id -g)', '--rm', fetch(:decompose_web_service), 'rake', *args)
   end
 
   def docker_execute(*args)
