@@ -78,8 +78,16 @@ namespace :decompose do
     end
   end
 
+  def docker_user_group
+    if fetch(:decompose_user)
+      "-u #{fetch(:decompose_user)}:#{fetch(:decompose_group)}"
+    else
+      ''
+    end
+  end
+
   def docker_rake(*args)
-    docker_execute('run', '-u $(id -u):$(id -g)', '--rm', fetch(:decompose_web_service), 'rake', *args)
+    docker_execute('run', docker_user_group(), '--rm', fetch(:decompose_web_service), 'rake', *args)
     #docker_execute('run', '--rm', fetch(:decompose_web_service), 'rake', *args)
   end
 
@@ -90,7 +98,7 @@ namespace :decompose do
   def docker_execute_interactively(host, command)
     user = host.user
     port = fetch(:port) || 22
-    docker_run = "docker-compose -p #{fetch :application} run -u $(id -u):$(id -g) --rm #{fetch(:decompose_web_service)} #{command}"
+    docker_run = "docker-compose -p #{fetch :application} run #{docker_user_group()} --rm #{fetch(:decompose_web_service)} #{command}"
     #docker_run = "docker-compose -p #{fetch :application} run --rm #{fetch(:decompose_web_service)} #{command}"
     exec "ssh -l #{user} #{host} -p #{port} -t 'cd #{deploy_to}/current && #{docker_run}'"
   end
